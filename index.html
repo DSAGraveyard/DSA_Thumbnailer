@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+    <link rel="stylesheet" href="bower_components/webix/codebase/webix.css" type="text/css"> 
+    <script src="bower_components/webix/codebase/webix.js" type="text/javascript"></script>  
+
+
+    
+
+    </head>
+    <body>
+        <script type="text/javascript" charset="utf-8">
+        /* place for webix.ui */
+        </script>
+
+	
+<div id="webix_main_container"><div>
+<div id="testA"></div>	
+
+<script>
+
+
+
+
+
+webix.ui({   container: 'webix_main_container',  
+        rows: [      {template:"row 1"}, //here you place any component you like
+        {template:"row 2"},
+        { cols:[
+            { template:"col 1" },
+            { template:"col 2" },
+            { template:"col 3" }
+        ]}
+]
+	})
+
+
+webix.ui({
+			type:"line",
+			container:"testA",
+    		rows: [
+    			{ template:"Row 1"},
+    			{ template:"Row 2"}
+    		]
+	});
+
+</script>
+
+</body>
+</html>

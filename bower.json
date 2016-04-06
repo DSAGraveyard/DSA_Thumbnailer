@@ -1,0 +1,17 @@
+{
+  "name": "DSA_Thumbnailer",
+  "description": "Lightweight DSA Thumbail and Image Viewer for Fixing Slide Names and Metadata",
+  "main": "index.html",
+  "license": "BSD-2-Clause",
+  "homepage": "https://github.com/DigitalSlideArchive/DSA_Thumbnailer",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.2"
+  }
+}
