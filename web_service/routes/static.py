@@ -12,11 +12,14 @@ from utils.config import get_app_configurations
 config = get_app_configurations()
 static = Blueprint('static', __name__, static_folder = config['static_dir'])
 
+print "static dir is",static.static_folder
+
 @static.route('/')
 def serve_index():
 	"""
 	The default request will serve index.html page
 	"""
+	print "Should be serving static file??"
 	return static.send_static_file('index.html')
 
 @static.route('/<path:path>')
