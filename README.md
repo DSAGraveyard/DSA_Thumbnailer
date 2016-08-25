@@ -11,3 +11,6 @@
 We are using NGINX to serve our Flask application;  so..
 
 cd /usr/share/nginx/html
+
+
+source /home/dgutman/osdTester/bin/activate

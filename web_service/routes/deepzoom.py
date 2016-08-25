@@ -51,7 +51,7 @@ def getThumbnail(path):
     path = os.path.abspath(os.path.join(dz.config['slides_dir'], path))
     osr = OpenSlide(path)
     format = 'jpeg'
-
+    print "looking for",path
     format = format.lower()
     if format != 'jpeg' and format != 'png':
         # Not supported by Deep Zoom

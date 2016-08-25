@@ -4,15 +4,17 @@ webix.ui({
 	view: "datatable",
 	columns:[
 		{ id:"fileName", header:["File Name", {content:"serverFilter"}], width:300},
-		{ id:"width", header:"Width", width:80},
-		{ id:"height", header:"Height", width:80},
+		{ id:"width", sort: "server", header:"Width", width:80},
+		{ id:"height", sort: "server", header:"Height", width:80},
 		{ id:"slidePath", header:["Slide Path", {content:"serverFilter"}], width:400,  fillspace:true},
 		{ id:"orig_resolution", header:"Ori. Res.", width:50},
 		{ id:"openSlideSuccess", header:"OpenSlide Success", width:100},
 	],
 	url: "/api/v1/slides",
+	select:true,
+	navigation:true,
 	pager:{
-		template:"{common.first()} {common.prev()} {common.pages()} {common.next()} {common.last()}",
+		template:"{common.first()} {common.prev()} {common.pages()} {common.next()} {common.last()}Total: #count#",
 		container:"paging",
 		size:20,
 		group:5
