@@ -48,10 +48,18 @@ def dzi(path):
 def getThumbnail(path):
     """This will return the 0/0 tile later whch in the case of an SVS image is actually the thumbnail..... """
 
-    path = os.path.abspath(os.path.join(dz.config['slides_dir'], path))
+    #path = os.path.abspath(os.path.join(dz.config['slides_dir'], path))
+
+    ### TO DO:  We will basically generate a cache request and see if the image is already living
+    ### in GIRDER FS--- if it is... we will return that blob, if not we will create it..
+    ### Stick it into GirderFS,  then get the object ID, adn then return that... or somethng lke taht
+
+
+    #path = path
+    print "looking for",path
+    path = "/" +path
     osr = OpenSlide(path)
     format = 'jpeg'
-    print "looking for",path
     format = format.lower()
     if format != 'jpeg' and format != 'png':
         # Not supported by Deep Zoom
