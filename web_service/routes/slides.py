@@ -40,8 +40,7 @@ def get_slides():
     if slidePath != None and slidePath != '':
         filters['slidePath'] = { "$regex": str(".*" + slidePath + ".*"), "$options": "i" }
 
-    if len(filters) == 0:
-        print "first call"
+    if start == None and count == None:
         return dumps({"data": db.find(filters, {'scanProperties': False}).limit(20), "pos": 0, "total_count": db.find().count()})
 
     return dumps({"data": db.find(filters, {'scanProperties': False}).skip(int(start)).limit(int(count)), "pos": int(start), "total_count": db.find(filters).count()})
