@@ -31,12 +31,11 @@ def get_slides():
     # Get url parameters: start, count and continue
     start = request.args.get('start')
     count = request.args.get('count')
-    pos = start
-
+    
     if start == None and count == None: 
-		return dumps({"data": db.find({}, {'scanProperties': False}), "pos": pos, "total_count": db.find().count()})
+        return dumps({"data": db.find({}, {'scanProperties': False}).limit(18), "pos": 0, "total_count": db.find().count()})
 
-    return dumps({"data": db.find({}, {'scanProperties': False}), "pos": pos})
+    return dumps({"data": db.find({}, {'scanProperties': False}).skip(int(start)).limit(int(count)), "pos": int(start)})
 
 ##This will process and store files that were marked as bad...
 @slides.route('/api/v1/report_bad_image', methods=["POST"])
