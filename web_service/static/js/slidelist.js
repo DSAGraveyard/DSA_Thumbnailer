@@ -2,8 +2,6 @@ webix.ui({
 	container:"layout_div",
     id:"slidelist",
 	view: "datatable",
-	autoConfig: true,
-	navigation:true,
 	columns:[
 		{ id:"fileName", header:["File Name", {content:"serverFilter"}], width:300},
 		{ id:"width", header:"Width", width:80},
@@ -20,5 +18,5 @@ webix.ui({
 		group:5
 	},
 	datafetch:20,
-	loadahead:15
+	loadahead:20
 });

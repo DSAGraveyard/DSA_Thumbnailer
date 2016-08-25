@@ -35,15 +35,16 @@ def get_slides():
     slidePath = request.args.get('filter[slidePath]')
     filters = {}
     
-    if fileName != None:
-        filters['fileName'] = { "$regex": ".*" + fileName + ".*", "$options": "i" }
-    if slidePath != None:
-        filters['slidePath'] = { "$regex": ".*" + slidePath + ".*", "$options": "i" }
+    if fileName != None and fileName != '':
+        filters['fileName'] = { "$regex": str(".*" + fileName + ".*"), "$options": "i" }
+    if slidePath != None and slidePath != '':
+        filters['slidePath'] = { "$regex": str(".*" + slidePath + ".*"), "$options": "i" }
 
-    if start == None and count == None: 
-        return dumps({"data": db.find(filters, {'scanProperties': False}).limit(18), "pos": 0, "total_count": db.find().count()})
+    if len(filters) == 0:
+        print "first call"
+        return dumps({"data": db.find(filters, {'scanProperties': False}).limit(20), "pos": 0, "total_count": db.find().count()})
 
-    return dumps({"data": db.find(filters, {'scanProperties': False}).skip(int(start)).limit(int(count)), "pos": int(start)})
+    return dumps({"data": db.find(filters, {'scanProperties': False}).skip(int(start)).limit(int(count)), "pos": int(start), "total_count": db.find(filters).count()})
 
 ##This will process and store files that were marked as bad...
 @slides.route('/api/v1/report_bad_image', methods=["POST"])
