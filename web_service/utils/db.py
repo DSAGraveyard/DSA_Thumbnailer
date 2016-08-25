@@ -9,6 +9,5 @@ def connect(config):
 	configurations
 	"""
 	client = pymongo.MongoClient(config['db_host'], int(config['db_port']))
-	db = client[config['db_name']]
-	err = client['ADRC_LoadErrors']
-	return db, err
+	db = client[config['db_name']][config['db_collection']]
+	return db

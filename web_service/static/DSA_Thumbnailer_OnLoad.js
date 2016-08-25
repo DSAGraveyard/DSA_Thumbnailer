@@ -21,35 +21,6 @@ sample_data = [
 
 function doOnLoad() {
 
-console.log('DSA Thumbnailer Loading');
-
-
-// thumb_dataview = new webix.ui({
-//     view:"dataview",
-//     width: 150,
-//     container:"dsa_thumbs",
-//     url: 'http://cancer.digitalslidearchive.emory.edu/api/v2/collections/slides/acc',
-//     template: '<#_id#>',
-
-//     id: 'thumbDV'
-// 	});
-
-
-			
- // leftCol = {
- //        view: "datatable",width:250,
- //        autoConfig: true,
- //        editable: true,
- //        data: {
- //            title: "My Fair Lady",
- //            year: 1964,
- //            votes: 533848,
- //            rating: 8.9,
- //            rank: 5
- //        }
- //    };
-
-
 function handler(){
     console.log(this);
     console.log(this.data)
@@ -106,41 +77,4 @@ thumbit =    {
                ]
            }).show();
             configure_osd("osd_container");
-
-
-    // p1_DataView = new dhtmlXDataView({
-    //     container: "p1_data_container",
-    //     type: 'p1_dataImgOnly',
-    //     pager: {
-    //         container: "paging_here",
-    //         size: 40,
-    //         group: 8
-    //     }
-
-    // });
-    // p1_DataView.load("/uda/ip_load/phase1test_remote.json", "json", p1_load_done);
-
-
-
-
-//leaves at 12:25 through paris   $553
-
-
-//this is a neat way to do it.. need to investigate this further
-// <div data-view='cols' data-type='space'>
-//     <div data-view='calendar'>Calendar</div>
-//     <div data-view='tabview'>
-//         <div data-header='Users' data-view='list'>
-//             <ul data-view='data'>
-//                 <li>Alex Wolski</li><li>Daniel Brown</li>
-//             </ul>
-//         </div>
-//         <div data-header='Details'>Lorem ipsum dolor sit</div>
-//     </div>
-// </div>
-
-
-
-  
-
 }

@@ -6,8 +6,7 @@ import pymongo, os, gridfs
 from utils.db import connect
 
 slides = Blueprint('slides', __name__)
-slide_db_ptr = None
-load_errors_db = None
+db = None
 
 @slides.record
 def record_params(setup_state):
@@ -16,9 +15,8 @@ def record_params(setup_state):
 
 @slides.before_app_first_request
 def _setup():
-    global slide_db_ptr
-    global load_errors_db
-    slide_db_ptr, load_errors_db = connect(slides.config)
+    global db
+    db = connect(slides.config)
 
 @slides.route('/api/v1/collections')
 @crossdomain(origin='*')
@@ -26,11 +24,13 @@ def get_collections():
     coll_list = slide_db_ptr['DSA_Slide_Data'].distinct('pt_id')
     return jsonify( { 'Collections': sorted(coll_list) })
 
-@slides.route('/api/v1/collections/slides/<string:coll_name>')
+@slides.route('/api/v1/slides')
 @crossdomain(origin='*')
-def get_slides( coll_name):
+def get_slides():
     """This will return the list of slides for a given collection aka tumor type """
-    return dumps( {'slide_list': slide_db_ptr['DSA_Slide_Data'].find({'pt_id':coll_name})} ) 
+    # Get url parameters: start, count and continue
+
+    return dumps(db.find({}, {'scanProperties': False}))
 
 ##This will process and store files that were marked as bad...
 @slides.route('/api/v1/report_bad_image', methods=["POST"])
