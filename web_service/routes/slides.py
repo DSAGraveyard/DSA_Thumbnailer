@@ -29,8 +29,14 @@ def get_collections():
 def get_slides():
     """This will return the list of slides for a given collection aka tumor type """
     # Get url parameters: start, count and continue
+    start = request.args.get('start')
+    count = request.args.get('count')
+    pos = start
 
-    return dumps(db.find({}, {'scanProperties': False}))
+    if start == None and count == None: 
+		return dumps({"data": db.find({}, {'scanProperties': False}), "pos": pos, "total_count": db.find().count()})
+
+    return dumps({"data": db.find({}, {'scanProperties': False}), "pos": pos})
 
 ##This will process and store files that were marked as bad...
 @slides.route('/api/v1/report_bad_image', methods=["POST"])
