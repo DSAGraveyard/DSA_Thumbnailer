@@ -4,3 +4,9 @@ html, body {
 	overflow-x: hidden; 
     overflow-y: auto;
 }
+.webix_pager_item {
+  	width: 50px;
+}
+.webix_pager_item_selected {
+    width: 50px;
+}

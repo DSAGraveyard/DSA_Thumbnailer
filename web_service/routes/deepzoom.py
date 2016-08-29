@@ -1,13 +1,17 @@
-from flask import request, url_for, jsonify, make_response, Blueprint, current_app as app
+from flask import send_file, request, url_for, jsonify, make_response, Blueprint, current_app as app
 from bson.json_util import dumps
 from utils.crossdomains import crossdomain
 from utils.deepzoom import _get_slide, _SlideCache
-import pymongo, os, gridfs
+import pymongo, os, gridfs, cStringIO
 from utils.db import connect
 from utils.deepzoom import PILBytesIO
 from openslide import OpenSlide
+from PIL import Image
+import pymongo
 
 dz = Blueprint('deepzoom', __name__)
+db = None
+gfs = None
 
 @dz.record
 def record_params(setup_state):
@@ -23,6 +27,8 @@ def _setup():
     Initialize openslide with some parmeters defined in the application
     configuration file
     """
+ 
+    global db, gfs
     opts = {
        'tile_size': int(dz.config['tile_size']),
        'overlap': int(dz.config['overlap']),
@@ -30,6 +36,9 @@ def _setup():
     }
 
     app.cache = _SlideCache(dz.config['slide_cache_size'], opts)
+    client = pymongo.MongoClient(dz.config['db_host'], int(dz.config['db_port']))
+    db = client[dz.config['db_name']]
+    gfs = gridfs.GridFS(db)
 
 @dz.route('/DZIMS/<path:path>.dzi')
 @crossdomain(origin='*')
@@ -58,23 +67,18 @@ def getThumbnail(path):
     #path = path
     print "looking for",path
     path = "/" +path
+
     osr = OpenSlide(path)
-    format = 'jpeg'
-    format = format.lower()
-    if format != 'jpeg' and format != 'png':
-        # Not supported by Deep Zoom
-        abort(404)
     try:
         thumb = osr.get_thumbnail( (300,300))
     except ValueError:
-        # Invalid level or coordinates
         abort(404)
 
-    buf = PILBytesIO()
+    buf = PILBytesIO()	
     thumb.save(buf, 'jpeg', quality=90)
     resp = make_response(buf.getvalue())
     resp.mimetype = 'image/%s' % format
-    return resp
+    return resp 
 
 @dz.route('/DZIMS/<path:path>_files/<int:level>/<int:col>_<int:row>.<format>')
 def tile(path, level, col, row, format):
