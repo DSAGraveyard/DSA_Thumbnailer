@@ -2,7 +2,7 @@ from flask import request, url_for, jsonify, make_response, Blueprint, current_a
 from bson.json_util import dumps
 from utils.crossdomains import crossdomain
 from utils.deepzoom import _get_slide, _SlideCache
-import pymongo, os, gridfs
+import pymongo, os, gridfs, re
 from utils.db import connect
 
 slides = Blueprint('slides', __name__)
@@ -28,28 +28,23 @@ def get_collections():
 @crossdomain(origin='*')
 def get_slides():
     """This will return the list of slides for a given collection aka tumor type """
-    # Get url parameters: start, count and continue
     start = request.args.get('start', 0)
     count = request.args.get('count', 20)
-    fileName = request.args.get('filter[fileName]')
-    slidePath = request.args.get('filter[slidePath]')
-    slideSet = request.args.get('filter[slideSet]')
-    sortWidth = request.args.get('sort[width]')
-    sortHeight = request.args.get('sort[height]')
     filters = {}
     sorts = []
+    
+    for key in request.args:
+        val = request.args.get(key)
+        m = re.match(r"(.*)\[(.*)\]", key)
+        if m:
+            op = m.group(1)
+            field = m.group(2)
 
-    if sortWidth != None:
-        sorts.append(("width", 1 if sortWidth == "desc" else -1))
-    if sortHeight != None:      
-        sorts.append(("height", 1 if sortHeight == "desc" else -1))
-    if fileName != None and fileName != '':
-        filters['fileName'] = { "$regex": str(".*" + fileName + ".*"), "$options": "i" }
-    if slidePath != None and slidePath != '':
-        filters['slidePath'] = { "$regex": str(".*" + slidePath + ".*"), "$options": "i" }
-    if slideSet != None and slideSet != '':
-        filters['slideSet'] = slideSet
-
+            if op == "filter" and val != '':
+                filters[field] = { "$regex": str(".*" + val + ".*"), "$options": "i" }
+            if op == "sort" and val != '':
+                sorts.append((field, 1 if val == "asc" else -1))
+  
     if len(sorts) > 0:
         return dumps({"data": db.find(filters, {'scanProperties': False}).skip(int(start)).limit(int(count)).sort(sorts), "pos": int(start), "total_count": db.find(filters).count()})
     else:
