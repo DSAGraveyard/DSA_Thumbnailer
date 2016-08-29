@@ -1,18 +1,3 @@
-function gridClicked(id)
-	{
-	console.log(id);
-
-	rowInfo = $$("slidelist").getItem(id);
-	console.log(rowInfo);
-
-	slidePath = rowInfo['slidePath']
-	//This is a stupid hack at this point... may or may not need to use the full path
-
-	$("#myfirstthumb").attr('src','/thumbnail'+slidePath); //need to add in some logic to deal with slashes
-
-	}
-
-
 webix.ui({
 	container:"layout_div",
     id:"slidelist",
@@ -39,9 +24,4 @@ webix.ui({
 	},
 	datafetch:20,
 	loadahead:20
-	/*on:
-		{
-		"onAfterSelect": gridClicked
-
-		}*/
 });
