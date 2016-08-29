@@ -1,4 +1,4 @@
-from flask import send_file, request, url_for, jsonify, make_response, Blueprint, current_app as app
+from flask import Response, send_file, request, url_for, jsonify, make_response, Blueprint, current_app as app
 from bson.json_util import dumps
 from utils.crossdomains import crossdomain
 from utils.deepzoom import _get_slide, _SlideCache
@@ -62,23 +62,27 @@ def getThumbnail(path):
     ### TO DO:  We will basically generate a cache request and see if the image is already living
     ### in GIRDER FS--- if it is... we will return that blob, if not we will create it..
     ### Stick it into GirderFS,  then get the object ID, adn then return that... or somethng lke taht
-
-
-    #path = path
     print "looking for",path
-    path = "/" +path
+    path = "/" +    path
+    filename = os.path.splitext(os.path.basename(path))[0] + ".jpg"
 
-    osr = OpenSlide(path)
-    try:
-        thumb = osr.get_thumbnail( (300,300))
-    except ValueError:
-        abort(404)
+    if not gfs.exists(filename=filename):
+        osr = OpenSlide(path)
 
-    buf = PILBytesIO()	
-    thumb.save(buf, 'jpeg', quality=90)
-    resp = make_response(buf.getvalue())
-    resp.mimetype = 'image/%s' % format
-    return resp 
+        try:
+            thumb = osr.get_thumbnail( (300,300))
+        except ValueError:
+            return Response(None, status=404)
+
+        buf = cStringIO.StringIO()
+        thumb.save(buf, 'jpeg', quality=90)
+        gfs.put(buf.getvalue(), contentType="image/jpeg", filename=filename)
+        return Response(buf.getvalue(), status=200, mimetype='image/jpeg')
+    else:
+        im = Image.open(gfs.get_last_version(filename))
+        buf = cStringIO.StringIO() 
+        im.save(buf, 'jpeg', quality=90)
+        return Response(buf.getvalue(), status=200, mimetype='image/jpeg')
 
 @dz.route('/DZIMS/<path:path>_files/<int:level>/<int:col>_<int:row>.<format>')
 def tile(path, level, col, row, format):
